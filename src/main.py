@@ -44,6 +44,10 @@ class OpenGLEarth:
         texture_id = self.load_texture()
         glBindTexture(GL_TEXTURE_2D, texture_id)
 
+    def close(self, key):
+        if key == b'\x1b':
+            sys.exit(0)
+
     def draw_sphere(self):
 
         radius = 0.5
@@ -115,6 +119,7 @@ class OpenGLEarth:
         self.init()
         glutDisplayFunc(self.display)
         glutReshapeFunc(self.reshape)
+        glutKeyboardFunc(self.close)
         glutIdleFunc(self.idle)
         glutMainLoop()
 
