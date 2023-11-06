@@ -25,6 +25,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install PyOpenGL PyOpenGL_accelerate
+        pip install pillow
 
   test:
     needs: build
@@ -40,6 +41,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install PyOpenGL PyOpenGL_accelerate
+        pip install pillow
     - name: Test with pytest
       run: |
         python -m pytest
