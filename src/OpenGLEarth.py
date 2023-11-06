@@ -7,14 +7,14 @@ from PIL import Image
 
 
 class OpenGLEarth:
-    def __init__(self, window_width, window_height, texture_path):
+    def __init__(self, window_width=800, window_height=600, texture_path="../img/earth_texture.jpg"):
         self.window_width = window_width
         self.window_height = window_height
         self.texture_path = texture_path
         self.rotation_angle_x = 0.0
         self.rotation_angle_y = 0.0
 
-    def load_texture(self):
+    def __load_texture(self):
         texture_id = glGenTextures(1)
         glBindTexture(GL_TEXTURE_2D, texture_id)
 
@@ -32,7 +32,7 @@ class OpenGLEarth:
 
         return texture_id
 
-    def init(self):
+    def __init(self):
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
         glEnable(GL_DEPTH_TEST)
@@ -41,14 +41,14 @@ class OpenGLEarth:
         glLightfv(GL_LIGHT0, GL_POSITION, light_position)
 
         glEnable(GL_TEXTURE_2D)
-        texture_id = self.load_texture()
+        texture_id = self.__load_texture()
         glBindTexture(GL_TEXTURE_2D, texture_id)
 
-    def close(self, key):
+    def __close(self, key):
         if key == b'\x1b':
             sys.exit(0)
 
-    def draw_sphere(self):
+    def __draw_sphere(self):
 
         radius = 0.5
         num_slices = 50
@@ -85,7 +85,7 @@ class OpenGLEarth:
                 glVertex3f(radius * x1, radius * y1, radius * z1)
             glEnd()
 
-    def display(self):
+    def __display(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
@@ -99,16 +99,19 @@ class OpenGLEarth:
         glRotatef(self.rotation_angle_x, 1.0, 0.0, 0.0)
         glRotatef(self.rotation_angle_y, 0.0, 1.0, 0.0)
 
-        self.draw_sphere()
+        self.__draw_sphere()
 
         glutSwapBuffers()
 
-    def reshape(self, width, height):
+    def __reshape(self, width, height):
         glViewport(0, 0, width, height)
 
-    def idle(self):
+    def rotate(self):
         self.rotation_angle_x += 0.5
         self.rotation_angle_y += 0.5
+
+    def __idle(self):
+        self.rotate()
         glutPostRedisplay()
 
     def run(self):
@@ -116,9 +119,9 @@ class OpenGLEarth:
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
         glutInitWindowSize(self.window_width, self.window_height)
         glutCreateWindow(b"OpenGL Earth")
-        self.init()
-        glutDisplayFunc(self.display)
-        glutReshapeFunc(self.reshape)
-        glutKeyboardFunc(self.close)
-        glutIdleFunc(self.idle)
+        self.__init()
+        glutDisplayFunc(self.__display)
+        glutReshapeFunc(self.__reshape)
+        glutKeyboardFunc(self.__close)
+        glutIdleFunc(self.__idle)
         glutMainLoop()
